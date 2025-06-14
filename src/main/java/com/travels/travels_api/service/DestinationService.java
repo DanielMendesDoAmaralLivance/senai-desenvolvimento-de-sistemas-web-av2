@@ -52,5 +52,28 @@ public class DestinationService {
         return destination;
     }
 
-    
+    public Optional<Destination> rate(Long id, int note) {
+        if(note < 0 || note > 5) {
+            // TODO: Retornar erro
+        }
+
+        Destination destination = destinations.get(id);
+
+        if(destination == null) {
+            // TODO: Retornar erro
+        }
+
+        double destinationAvgRating = destination.getAvgRating();
+        int destinationTotalRatings = destination.getTotalRatings();
+
+        double newAvgRating = (destinationAvgRating * destinationTotalRatings) + note;
+        int newTotalRatings = destinationTotalRatings + 1;
+
+        double newAvg = newAvgRating / newTotalRatings;
+
+        destination.setAvgRating(newAvg);
+        destination.setTotalRatings(newTotalRatings);
+
+        return Optional.of(destination);
+    }
 }
