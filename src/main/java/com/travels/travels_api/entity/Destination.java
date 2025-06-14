@@ -5,8 +5,8 @@ public class Destination {
 
     private String name;
     private String description;
-    private String address;
-    
+    private String location;
+
     private double avgRating;
     private int totalRatings;
 
@@ -32,11 +32,11 @@ public class Destination {
         this.description = description;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLocation() {
+        return location;
     }
-    public void setAddress(String address) {
-        this.address = address;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public double getAvgRating() {

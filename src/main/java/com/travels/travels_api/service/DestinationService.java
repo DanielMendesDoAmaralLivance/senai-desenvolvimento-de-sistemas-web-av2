@@ -1,6 +1,8 @@
 package com.travels.travels_api.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -12,6 +14,10 @@ import com.travels.travels_api.entity.Destination;
 public class DestinationService {
     private final Map<Long, Destination> destinations = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong();
+
+    public List<Destination> list() {
+        return new ArrayList<>(destinations.values());
+    }
 
     public Destination create(Destination destination) {
         destination.setId(idGenerator.incrementAndGet());
