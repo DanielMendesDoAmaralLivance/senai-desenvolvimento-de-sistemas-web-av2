@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.travels.travels_api.entity.Destination;
+import com.travels.travels_api.exception.BadRequestHttpException;
+import com.travels.travels_api.exception.NotFoundHttpException;
 
 @Service
 public class DestinationService {
@@ -35,8 +37,13 @@ public class DestinationService {
         return new ArrayList<>(result);
     }
 
-    public Optional<Destination> get(Long id) {
-        Optional<Destination> destination = Optional.ofNullable(destinations.get(id));
+    public Destination get(Long id) {
+        Destination destination = destinations.get(id);
+
+        if (destination == null) {
+
+            throw new NotFoundHttpException("Destination is not found");
+        }
 
         return destination;
     }
@@ -52,15 +59,15 @@ public class DestinationService {
         return destination;
     }
 
-    public Optional<Destination> rate(Long id, int note) {
-        if(note < 0 || note > 5) {
-            // TODO: Retornar erro
+    public Destination rate(Long id, int note) {
+        if (note < 0 || note > 5) {
+            throw new BadRequestHttpException("Note rate must be between 0 and 5");
         }
 
         Destination destination = destinations.get(id);
 
-        if(destination == null) {
-            // TODO: Retornar erro
+        if (destination == null) {
+            throw new NotFoundHttpException("Destination is not found");
         }
 
         double destinationAvgRating = destination.getAvgRating();
@@ -74,6 +81,16 @@ public class DestinationService {
         destination.setAvgRating(newAvg);
         destination.setTotalRatings(newTotalRatings);
 
-        return Optional.of(destination);
+        return destination;
+    }
+
+    public Destination delete(Long id) {
+        Destination destination = destinations.remove(id);
+
+        if (destination == null) {
+            throw new NotFoundHttpException("Destination is not found");
+        }
+
+        return destination;
     }
 }
