@@ -60,8 +60,8 @@ public class DestinationService {
     }
 
     public Destination rate(Long id, int note) {
-        if (note < 0 || note > 5) {
-            throw new BadRequestHttpException("Note rate must be between 0 and 5");
+        if (note < 1 || note > 10) {
+            throw new BadRequestHttpException("Note rate must be between 1 and 10");
         }
 
         Destination destination = destinations.get(id);
