@@ -21,20 +21,24 @@ public class DestinationService {
     public List<Destination> list(Optional<String> searchTerm) {
         Collection<Destination> result = destinations.values();
 
-        if(!searchTerm.isPresent()) {
+        if (!searchTerm.isPresent()) {
             return new ArrayList<>(result);
         }
 
         String searchTermNormalized = searchTerm.get().toLowerCase();
 
         result = result.stream()
-            .filter(
-                d -> d.getName().toLowerCase().contains(searchTermNormalized) ||
-                     d.getLocation().toLowerCase().contains(searchTermNormalized)
-            )
-            .collect(Collectors.toList());
+                .filter(d -> d.getName().toLowerCase().contains(searchTermNormalized) ||
+                        d.getLocation().toLowerCase().contains(searchTermNormalized))
+                .collect(Collectors.toList());
 
         return new ArrayList<>(result);
+    }
+
+    public Optional<Destination> get(Long id) {
+        Optional<Destination> destination = Optional.ofNullable(destinations.get(id));
+
+        return destination;
     }
 
     public Destination create(Destination destination) {
@@ -47,4 +51,6 @@ public class DestinationService {
 
         return destination;
     }
+
+    
 }

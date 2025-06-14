@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,11 @@ public class DestinationController {
     @GetMapping
     public List<Destination> get(@RequestParam(required = false) String searchTerm) {
         return destinationService.list(Optional.ofNullable(searchTerm));
+    }
+
+    @GetMapping("/{id}")
+    public Optional<Destination> getById(@PathVariable Long id) {
+        return destinationService.get(id);
     }
 
     @PostMapping
