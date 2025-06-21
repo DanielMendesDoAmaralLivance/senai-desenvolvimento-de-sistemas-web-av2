@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +25,9 @@ public class User {
 
     private String email;
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     // Getters / Setters
     public String getFirstName() {
@@ -55,6 +58,10 @@ public class User {
         this.password = password;
     }
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    public Role getRole() {
+        return role;
+    }
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
