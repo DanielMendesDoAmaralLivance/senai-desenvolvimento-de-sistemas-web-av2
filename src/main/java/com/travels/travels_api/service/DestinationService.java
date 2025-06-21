@@ -1,7 +1,5 @@
 package com.travels.travels_api.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,22 +7,27 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.travels.travels_api.entity.Destination;
 import com.travels.travels_api.exception.BadRequestHttpException;
 import com.travels.travels_api.exception.NotFoundHttpException;
+import com.travels.travels_api.repository.DestinationRepository;
 
 @Service
 public class DestinationService {
+    @Autowired
+    private DestinationRepository destinationRepository;
+
     private final Map<Long, Destination> destinations = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong();
 
     public List<Destination> list(Optional<String> searchTerm) {
-        Collection<Destination> result = destinations.values();
+        var result = destinationRepository.findAll();
 
         if (!searchTerm.isPresent()) {
-            return new ArrayList<>(result);
+            return result;
         }
 
         String searchTermNormalized = searchTerm.get().toLowerCase();
@@ -34,7 +37,7 @@ public class DestinationService {
                         d.getLocation().toLowerCase().contains(searchTermNormalized))
                 .collect(Collectors.toList());
 
-        return new ArrayList<>(result);
+        return result;
     }
 
     public Destination get(Long id) {

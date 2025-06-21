@@ -1,5 +1,6 @@
 package com.travels.travels_api.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +18,9 @@ public class Destination {
     private String description;
     private String location;
 
+    @Column(name = "avg_rating")
     private double avgRating;
+    @Column(name = "total_ratings")
     private int totalRatings;
 
     // Getters / Setters
