@@ -1,7 +1,10 @@
 package com.travels.travels_api.controller;
 
+import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +25,13 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity<Response<Object>> handleNotFoundHttpException(NotFoundHttpException e) {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
+            .body(new Response<>(e.getMessage(), null));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<Response<Object>> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        return ResponseEntity
+            .status(HttpStatus.FORBIDDEN)
             .body(new Response<>(e.getMessage(), null));
     }
 
