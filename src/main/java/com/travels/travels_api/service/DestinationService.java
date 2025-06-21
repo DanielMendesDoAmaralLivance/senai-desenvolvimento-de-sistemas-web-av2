@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,20 +23,13 @@ public class DestinationService {
     private final AtomicLong idGenerator = new AtomicLong();
 
     public List<Destination> list(Optional<String> searchTerm) {
-        var result = destinationRepository.findAll();
-
         if (!searchTerm.isPresent()) {
-            return result;
+            return destinationRepository.findAll();
         }
 
         String searchTermNormalized = searchTerm.get().toLowerCase();
 
-        result = result.stream()
-                .filter(d -> d.getName().toLowerCase().contains(searchTermNormalized) ||
-                        d.getLocation().toLowerCase().contains(searchTermNormalized))
-                .collect(Collectors.toList());
-
-        return result;
+        return destinationRepository.findByNameContainingIgnoreCaseOrLocationContainingIgnoreCase(searchTermNormalized, searchTermNormalized);
     }
 
     public Destination get(Long id) {
