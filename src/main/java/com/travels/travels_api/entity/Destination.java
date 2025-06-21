@@ -15,6 +15,7 @@ public class Destination {
     private Long id;
 
     private String name;
+    @Column(length = 512)
     private String description;
     private String location;
 

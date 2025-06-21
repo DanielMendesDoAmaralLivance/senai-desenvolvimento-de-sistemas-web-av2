@@ -1,10 +1,7 @@
 package com.travels.travels_api.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +16,6 @@ public class DestinationService {
     @Autowired
     private DestinationRepository destinationRepository;
 
-    private final Map<Long, Destination> destinations = new HashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong();
-
     public List<Destination> list(Optional<String> searchTerm) {
         if (!searchTerm.isPresent()) {
             return destinationRepository.findAll();
@@ -33,23 +27,22 @@ public class DestinationService {
     }
 
     public Destination get(Long id) {
-        Destination destination = destinations.get(id);
+        Optional<Destination> result = destinationRepository.findById(id);
 
-        if (destination == null) {
-
+        if (!result.isPresent()) {
             throw new NotFoundHttpException("Destination is not found");
         }
+
+        Destination destination = result.get();
 
         return destination;
     }
 
     public Destination create(Destination destination) {
-        destination.setId(idGenerator.incrementAndGet());
-
         destination.setAvgRating(0);
         destination.setTotalRatings(0);
 
-        destinations.put(destination.getId(), destination);
+        destinationRepository.save(destination);
 
         return destination;
     }
@@ -59,11 +52,13 @@ public class DestinationService {
             throw new BadRequestHttpException("Note rate must be between 1 and 10");
         }
 
-        Destination destination = destinations.get(id);
+        Optional<Destination> result = destinationRepository.findById(id);
 
-        if (destination == null) {
+        if (!result.isPresent()) {
             throw new NotFoundHttpException("Destination is not found");
         }
+
+        Destination destination = result.get();
 
         double destinationAvgRating = destination.getAvgRating();
         int destinationTotalRatings = destination.getTotalRatings();
@@ -76,16 +71,12 @@ public class DestinationService {
         destination.setAvgRating(newAvg);
         destination.setTotalRatings(newTotalRatings);
 
+        destinationRepository.save(destination);
+
         return destination;
     }
 
-    public Destination delete(Long id) {
-        Destination destination = destinations.remove(id);
-
-        if (destination == null) {
-            throw new NotFoundHttpException("Destination is not found");
-        }
-
-        return destination;
+    public void delete(Long id) {
+        destinationRepository.deleteById(id);
     }
 }

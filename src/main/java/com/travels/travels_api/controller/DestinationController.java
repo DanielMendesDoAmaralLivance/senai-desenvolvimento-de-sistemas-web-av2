@@ -57,7 +57,7 @@ public class DestinationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<Destination>> delete(@PathVariable Long id) {
-        Destination result = destinationService.delete(id);
-        return ResponseEntity.ok(new Response<Destination>(null, result));
+        destinationService.delete(id);
+        return ResponseEntity.ok(new Response<Destination>(null, null));
     }
 }
