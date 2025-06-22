@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.travels.travels_api.dto.api.Response;
+import com.travels.travels_api.dto.api.ResponseData;
 import com.travels.travels_api.dto.destination.RateRequestDTO;
 import com.travels.travels_api.entity.Destination;
 import com.travels.travels_api.service.DestinationService;
@@ -29,37 +30,38 @@ public class DestinationController {
     private DestinationService destinationService;
 
     @GetMapping
-    public ResponseEntity<Response<List<Destination>>> get(@RequestParam(required = false) String searchTerm) {
+    public ResponseEntity<ResponseData<List<Destination>>> get(@RequestParam(required = false) String searchTerm) {
         List<Destination> result = destinationService.list(Optional.ofNullable(searchTerm));
 
-        return ResponseEntity.ok(new Response<List<Destination>>(null, result));
+        return ResponseEntity.ok(new ResponseData<List<Destination>>(result));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<Destination>> getById(@PathVariable Long id) {
+    public ResponseEntity<ResponseData<Destination>> getById(@PathVariable Long id) {
         Destination result = destinationService.get(id);
-        return ResponseEntity.ok(new Response<Destination>(null, result));
+        return ResponseEntity.ok(new ResponseData<Destination>(result));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Response<Destination>> post(@RequestBody Destination destination) {
+    public ResponseEntity<ResponseData<Destination>> post(@RequestBody Destination destination) {
         Destination result = destinationService.create(destination);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<Destination>(null, result));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseData<Destination>(result));
     }
 
     @PatchMapping("/{id}/rate")
-    public ResponseEntity<Response<Destination>> rate(
+    public ResponseEntity<ResponseData<Destination>> rate(
         @PathVariable Long id,
         @RequestBody RateRequestDTO request
     ) {
         Destination result = destinationService.rate(id, request.getNote());
-        return ResponseEntity.ok(new Response<Destination>(null, result));
+        return ResponseEntity.ok(new ResponseData<Destination>(result));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response<Destination>> delete(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Response> delete(@PathVariable Long id) {
         destinationService.delete(id);
-        return ResponseEntity.ok(new Response<Destination>(null, null));
+        return ResponseEntity.ok(new Response());
     }
 }

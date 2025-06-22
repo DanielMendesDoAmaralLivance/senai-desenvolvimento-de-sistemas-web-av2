@@ -1,15 +1,17 @@
 package com.travels.travels_api.dto.api;
 
-public class Response<T> {
-    private String message;
-    private T data;
+public class Response {
+    private boolean success = true;
+    private String message = "";
+
+    public Response() {}
 
     public Response(
-        String message,
-        T data
+        boolean success,
+        String message
     ) {
+        this.success = success;
         this.message = message;
-        this.data = data;
     }
 
     public String getMessage() {
@@ -18,11 +20,11 @@ public class Response<T> {
     public void setMessage(String message) {
         this.message = message;
     }
-
-    public T getData() {
-        return data;
+    
+    public boolean isSuccess() {
+        return success;
     }
-    public void setData(T data) {
-        this.data = data;
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

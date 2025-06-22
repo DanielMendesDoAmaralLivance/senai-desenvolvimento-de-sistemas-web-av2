@@ -31,7 +31,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(customUserDetailsService)
                 .httpBasic(Customizer.withDefaults())
@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
-                            String json = new ObjectMapper().writeValueAsString(new Response<>("Unauthorized", null));
+                            String json = new ObjectMapper().writeValueAsString(new Response(false, "Unauthorized"));
                             response.getWriter().write(json);
                         }));
 
